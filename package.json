@@ -1,0 +1,35 @@
+{
+  "name": "stock-app",
+  "version": "0.0.1",
+  "description": "A stock app that displays a stock ticker for a user-entered company symbol.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx babel js/main.es6.js -o js/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delrosariod/DMIT2008_Assignment1.git"
+  },
+  "keywords": [
+    "stock",
+    "symbol",
+    "company"
+  ],
+  "author": "Daniel Del Rosario",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/delrosariod/DMIT2008_Assignment1/issues"
+  },
+  "homepage": "https://github.com/delrosariod/DMIT2008_Assignment1#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}

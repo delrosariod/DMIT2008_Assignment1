@@ -1,36 +1,34 @@
-(() => {
-	const API_KEY = 'V33XLB8FW7E5O77P';
-	const BASE_URL = 'https://www.alphavantage.co/';
-	const stockInfoForm = document.querySelector('.frm.stocks');
-  
+"use strict";
+
+(function () {
+  var API_KEY = 'V33XLB8FW7E5O77P';
+  var BASE_URL = 'https://www.alphavantage.co/';
+  var stockInfoForm = document.querySelector('.frm.stocks');
   /**
-	 * Displays the current stock symbol and information for a company, on a given element.
-	 *
-	 * @param {Object} currentStock - an object, the stock data from AlphaVantage api.
-	 * @param {Object} stockElement - The reference to the stock element that we need.
-	 */
-  const displayStock = (currentStock, stockElement) => {
-    const companySymbol = stockElement.querySelector('.symbol');
-    const companyName = stockElement.querySelector('.name');
-    const currentDate = stockElement.querySelector('.date');
-    const stockInterval = stockElement.querySelector('.interval');
+  * Displays the current stock symbol and information for a company, on a given element.
+  *
+  * @param {Object} currentStock - an object, the stock data from AlphaVantage api.
+  * @param {Object} stockElement - The reference to the stock element that we need.
+  */
 
-    companySymbol.innerText = `${currentStock.Symbol}`;
-    companyName.innerText = `${currentStock.Name}`;
+  var displayStock = function displayStock(currentStock, stockElement) {
+    var companySymbol = stockElement.querySelector('.symbol');
+    var companyName = stockElement.querySelector('.name');
+    var currentDate = stockElement.querySelector('.date');
+    var stockInterval = stockElement.querySelector('.interval');
+    companySymbol.innerText = "".concat(currentStock.Symbol);
+    companyName.innerText = "".concat(currentStock.Name);
+  };
 
-  }
+  stockInfoForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var company = event.target.querySelector('[name=company]').value;
+    var currentStockUrl = "".concat(BASE_URL, "query?function=OVERVIEW&symbol=").concat(company, "&apikey=").concat(API_KEY); //const forecastWeatherUrl = `${BASE_URL}forecast?q=${currentLocation}&appid=${API_KEY}&units=metric`;
 
-  stockInfoForm.addEventListener('submit', (event) => {
-	  event.preventDefault();
-	  const company = event.target.querySelector('[name=company]').value;
-	  const currentStockUrl = `${BASE_URL}query?function=OVERVIEW&symbol=${company}&apikey=${API_KEY}`;
-	  //const forecastWeatherUrl = `${BASE_URL}forecast?q=${currentLocation}&appid=${API_KEY}&units=metric`;
-
-
-    fetch(currentStockUrl)
-    .then((response) => response.json())
-    .then((currentStockData) => {
+    fetch(currentStockUrl).then(function (response) {
+      return response.json();
+    }).then(function (currentStockData) {
       displayStock(currentStockData, document.querySelector('.stock-display'));
-    }); 
+    });
   });
-  })();
+})();
