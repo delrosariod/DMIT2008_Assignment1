@@ -15,6 +15,7 @@
   }
 
   /**
+   * Displays stock ticks using 15min intervals
    * 
    * @param {obj} stockData - Stock Data retrived from Alphavantage Stock API (Time series intraday)
    */
