@@ -11,24 +11,54 @@
   * @param {Object} stockElement - The reference to the stock element that we need.
   */
 
-  var displayStock = function displayStock(currentStock, stockElement) {
-    var companySymbol = stockElement.querySelector('.symbol');
+  var displayStockCompanyName = function displayStockCompanyName(currentStock, stockElement) {
     var companyName = stockElement.querySelector('.name');
-    var currentDate = stockElement.querySelector('.date');
-    var stockInterval = stockElement.querySelector('.interval');
-    companySymbol.innerText = "".concat(currentStock.Symbol);
     companyName.innerText = "".concat(currentStock.Name);
+  };
+
+  var displayStockTicks = function displayStockTicks(stockData) {
+    var latestTick;
+    var intervalField = document.querySelector('.interval');
+    var symbolField = document.querySelector('.symbol');
+    var dateField = document.querySelector('.date');
+    var openField = document.querySelector('.open');
+    var closeField = document.querySelector('.close');
+    var highField = document.querySelector('.high');
+    var lowField = document.querySelector('.low');
+    var tickData = stockData['Meta Data'],
+        ticks = stockData['Time Series (15min)'];
+    var symbol = tickData['2. Symbol'],
+        currentTickDate = tickData['3. Last Refreshed'],
+        interval = tickData['4. Interval'];
+    latestTick = ticks[currentTickDate];
+    var _latestTick = latestTick,
+        open = _latestTick['1. open'],
+        high = _latestTick['2. high'],
+        low = _latestTick['3. low'],
+        close = _latestTick['4. close'];
+    intervalField.innerText = interval;
+    symbolField.innerText = symbol.toUpperCase();
+    dateField.innerText = new Date(currentTickDate).toUTCString();
+    openField.innerText = Number(open).toFixed(2);
+    closeField.innerText = Number(close).toFixed(2);
+    highField.innerText = Number(high).toFixed(2);
+    lowField.innerText = Number(low).toFixed(2);
   };
 
   stockInfoForm.addEventListener('submit', function (event) {
     event.preventDefault();
     var company = event.target.querySelector('[name=company]').value;
-    var currentStockUrl = "".concat(BASE_URL, "query?function=OVERVIEW&symbol=").concat(company, "&apikey=").concat(API_KEY); //const forecastWeatherUrl = `${BASE_URL}forecast?q=${currentLocation}&appid=${API_KEY}&units=metric`;
-
+    var currentStockUrl = "".concat(BASE_URL, "query?function=OVERVIEW&symbol=").concat(company, "&apikey=").concat(API_KEY);
+    var currentStockTickUrl = "".concat(BASE_URL, "query?function=TIME_SERIES_INTRADAY&symbol=").concat(company, "&interval=15min&apikey=").concat(API_KEY);
     fetch(currentStockUrl).then(function (response) {
       return response.json();
     }).then(function (currentStockData) {
-      displayStock(currentStockData, document.querySelector('.stock-display'));
+      displayStockCompanyName(currentStockData, document.querySelector('.stock-display'));
+      return fetch(currentStockTickUrl);
+    }).then(function (response) {
+      return response.json();
+    }).then(function (stockData) {
+      displayStockTicks(stockData);
     });
   });
 })();
