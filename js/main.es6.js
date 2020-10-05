@@ -14,14 +14,19 @@
     companyName.innerText = `${currentStock.Name}`;
   }
 
+  /**
+   * 
+   * @param {obj} stockData - Stock Data retrived from Alphavantage Stock API (Time series intraday)
+   */
   const displayStockTicks = (stockData) => {
     let currentItem;
+    let tickList;
     const intervalField = document.querySelector('.interval');
     const symbolField = document.querySelector('.symbol');
     const dateField = document.querySelector('.date');
     
     let allTicks = Object.keys(stockData['Time Series (15min)']);
-    const tickList = document.createElement("ul");
+    tickList = document.createElement("ul");
   
     const {'Meta Data': tickData, 'Time Series (15min)' : ticks} = stockData;
     const {
@@ -30,7 +35,9 @@
       ['4. Interval']: interval
     } = tickData;
 
-
+/**
+ * Cycle through each time tick and display stock information for each 15min interval.
+ */
     allTicks.forEach(tick => {
       currentItem = document.createElement("li");
       currentItem.innerHTML += `
@@ -51,11 +58,13 @@
 
     intervalField.innerText = interval;
     symbolField.innerText = symbol.toUpperCase();
-    dateField.innerText = new Date(currentTickDate).toUTCString();
+    dateField.innerText = currentTickDate;
 
   }
   
-
+/**
+ * Submit event triggers a fetch for json data.
+ */
   stockInfoForm.addEventListener('submit', (event) => {
 	  event.preventDefault();
 	  const company = event.target.querySelector('[name=company]').value;

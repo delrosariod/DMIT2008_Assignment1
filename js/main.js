@@ -15,19 +15,29 @@
     var companyName = stockElement.querySelector('.name');
     companyName.innerText = "".concat(currentStock.Name);
   };
+  /**
+   * 
+   * @param {obj} stockData - Stock Data retrived from Alphavantage Stock API (Time series intraday)
+   */
+
 
   var displayStockTicks = function displayStockTicks(stockData) {
     var currentItem;
+    var tickList;
     var intervalField = document.querySelector('.interval');
     var symbolField = document.querySelector('.symbol');
     var dateField = document.querySelector('.date');
     var allTicks = Object.keys(stockData['Time Series (15min)']);
-    var tickList = document.createElement("ul");
+    tickList = document.createElement("ul");
     var tickData = stockData['Meta Data'],
         ticks = stockData['Time Series (15min)'];
     var symbol = tickData['2. Symbol'],
         currentTickDate = tickData['3. Last Refreshed'],
         interval = tickData['4. Interval'];
+    /**
+     * Cycle through each time tick and display stock information for each 15min interval.
+     */
+
     allTicks.forEach(function (tick) {
       currentItem = document.createElement("li");
       currentItem.innerHTML += "\n      <div class=\"tick-detail\">\n        <ul>\n          <li>Date: ".concat(tick, "</li>\n          <li>Open: $ ").concat(stockData['Time Series (15min)'][tick]['1. open'], "</li>\n          <li>High: $").concat(stockData['Time Series (15min)'][tick]['2. high'], "</li>\n          <li>Low: $").concat(stockData['Time Series (15min)'][tick]['3. low'], "</li>\n          <li>Close: $").concat(stockData['Time Series (15min)'][tick]['4. close'], "</li>\n          <li>Volume: ").concat(stockData['Time Series (15min)'][tick]['5. volume'], "</li>\n        </ul>\n      </div>\n    ");
@@ -36,8 +46,12 @@
     document.querySelector('.tick-display').append(tickList);
     intervalField.innerText = interval;
     symbolField.innerText = symbol.toUpperCase();
-    dateField.innerText = new Date(currentTickDate).toUTCString();
+    dateField.innerText = currentTickDate;
   };
+  /**
+   * Submit event triggers a fetch for json data.
+   */
+
 
   stockInfoForm.addEventListener('submit', function (event) {
     event.preventDefault();
