@@ -15,17 +15,13 @@
   }
 
   const displayStockTicks = (stockData) => {
-    let latestTick;
-    let nextTick;
+    let currentItem;
     const intervalField = document.querySelector('.interval');
     const symbolField = document.querySelector('.symbol');
     const dateField = document.querySelector('.date');
-    const openField = document.querySelector('.open');
-    const closeField = document.querySelector('.close');
-    const highField = document.querySelector('.high');
-    const lowField = document.querySelector('.low');
     
-
+    let allTicks = Object.keys(stockData['Time Series (15min)']);
+    const tickList = document.createElement("ul");
   
     const {'Meta Data': tickData, 'Time Series (15min)' : ticks} = stockData;
     const {
@@ -34,21 +30,28 @@
       ['4. Interval']: interval
     } = tickData;
 
-    latestTick = ticks[currentTickDate];
-    const {
-      ['1. open'] : open,
-      ['2. high'] : high,
-      ['3. low'] : low,
-      ['4. close'] : close
-    } = latestTick;
+
+    allTicks.forEach(tick => {
+      currentItem = document.createElement("li");
+      currentItem.innerHTML += `
+      <div class="tick-detail">
+        <ul>
+          <li>Date: ${tick}</li>
+          <li>Open: $ ${stockData['Time Series (15min)'][tick]['1. open']}</li>
+          <li>High: $${stockData['Time Series (15min)'][tick]['2. high']}</li>
+          <li>Low: $${stockData['Time Series (15min)'][tick]['3. low']}</li>
+          <li>Close: $${stockData['Time Series (15min)'][tick]['4. close']}</li>
+          <li>Volume: ${stockData['Time Series (15min)'][tick]['5. volume']}</li>
+        </ul>
+      </div>
+    `;
+    tickList.append(currentItem);
+    })
+    document.querySelector('.tick-display').append(tickList);
 
     intervalField.innerText = interval;
     symbolField.innerText = symbol.toUpperCase();
     dateField.innerText = new Date(currentTickDate).toUTCString();
-    openField.innerText = Number(open).toFixed(2);
-    closeField.innerText = Number(close).toFixed(2);
-    highField.innerText = Number(high).toFixed(2);
-    lowField.innerText = Number(low).toFixed(2);
 
   }
   
@@ -59,7 +62,6 @@
     const currentStockUrl = `${BASE_URL}query?function=OVERVIEW&symbol=${company}&apikey=${API_KEY}`;
     const currentStockTickUrl = `${BASE_URL}query?function=TIME_SERIES_INTRADAY&symbol=${company}&interval=15min&apikey=${API_KEY}`;
 
-    
     fetch(currentStockUrl)
     .then((response) => response.json())
     .then((currentStockData) => {
@@ -71,4 +73,5 @@
       displayStockTicks(stockData);
     })
   });
+
   })();

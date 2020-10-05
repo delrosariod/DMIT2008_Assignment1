@@ -17,32 +17,26 @@
   };
 
   var displayStockTicks = function displayStockTicks(stockData) {
-    var latestTick;
+    var currentItem;
     var intervalField = document.querySelector('.interval');
     var symbolField = document.querySelector('.symbol');
     var dateField = document.querySelector('.date');
-    var openField = document.querySelector('.open');
-    var closeField = document.querySelector('.close');
-    var highField = document.querySelector('.high');
-    var lowField = document.querySelector('.low');
+    var allTicks = Object.keys(stockData['Time Series (15min)']);
+    var tickList = document.createElement("ul");
     var tickData = stockData['Meta Data'],
         ticks = stockData['Time Series (15min)'];
     var symbol = tickData['2. Symbol'],
         currentTickDate = tickData['3. Last Refreshed'],
         interval = tickData['4. Interval'];
-    latestTick = ticks[currentTickDate];
-    var _latestTick = latestTick,
-        open = _latestTick['1. open'],
-        high = _latestTick['2. high'],
-        low = _latestTick['3. low'],
-        close = _latestTick['4. close'];
+    allTicks.forEach(function (tick) {
+      currentItem = document.createElement("li");
+      currentItem.innerHTML += "\n      <div class=\"tick-detail\">\n        <ul>\n          <li>Date: ".concat(tick, "</li>\n          <li>Open: $ ").concat(stockData['Time Series (15min)'][tick]['1. open'], "</li>\n          <li>High: $").concat(stockData['Time Series (15min)'][tick]['2. high'], "</li>\n          <li>Low: $").concat(stockData['Time Series (15min)'][tick]['3. low'], "</li>\n          <li>Close: $").concat(stockData['Time Series (15min)'][tick]['4. close'], "</li>\n          <li>Volume: ").concat(stockData['Time Series (15min)'][tick]['5. volume'], "</li>\n        </ul>\n      </div>\n    ");
+      tickList.append(currentItem);
+    });
+    document.querySelector('.tick-display').append(tickList);
     intervalField.innerText = interval;
     symbolField.innerText = symbol.toUpperCase();
     dateField.innerText = new Date(currentTickDate).toUTCString();
-    openField.innerText = Number(open).toFixed(2);
-    closeField.innerText = Number(close).toFixed(2);
-    highField.innerText = Number(high).toFixed(2);
-    lowField.innerText = Number(low).toFixed(2);
   };
 
   stockInfoForm.addEventListener('submit', function (event) {
